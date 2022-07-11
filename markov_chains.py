@@ -34,9 +34,9 @@ def create_word_dictionary(word_list: list[str], state_length: int = 2, markov_s
     return markov_system
 
 
-def save_dictionary(word_dictionary: dict[str, dict[str, int]], filename: str = 'markov_system.json') -> None:
+def save_dictionary(markov_system: dict[str, dict[str, int]], filename: str = 'markov_system.json') -> None:
     with open(filename, 'w') as f:
-        json.dump(word_dictionary, f)
+        json.dump(markov_system, f)
 
 
 def load_dictionary(filename: str = 'markov_system.json') -> dict[str, dict[str, int]]:
@@ -44,30 +44,30 @@ def load_dictionary(filename: str = 'markov_system.json') -> dict[str, dict[str,
         return json.load(f)
 
 
-def sample_next_state(word_dict: dict[str, dict[str, int]], current_state: str):
-    next_state_vector_weights = [weight for weight in word_dict[current_state].values()]
-    next_state_vector = [key for key in word_dict[current_state].keys()]
+def sample_next_state(markov_system: dict[str, dict[str, int]], current_state: str):
+    next_state_vector_weights = [weight for weight in markov_system[current_state].values()]
+    next_state_vector = [key for key in markov_system[current_state].keys()]
     return random.choices(next_state_vector, next_state_vector_weights)[0]
 
 
-def stochastic_chain(word_dictionary: dict[str, dict[str, int]], seed: str = None, chain_length: int = 15) -> str:
-    k = len(list(word_dictionary.keys())[0].split())
+def stochastic_chain(markov_system: dict[str, dict[str, int]], seed: str = None, chain_length: int = 15) -> str:
+    k = len(list(markov_system.keys())[0].split())
     if seed:
         try:
-            if word_dictionary[seed]:
+            if markov_system[seed]:
                 sentence = seed
                 for i in range(chain_length):
                     sentence += ' '
-                    sentence += sample_next_state(word_dictionary, ' '.join(sentence.split()[i: i+k]))
+                    sentence += sample_next_state(markov_system, ' '.join(sentence.split()[i: i+k]))
                 return sentence
         except KeyError:
             return 'Seed does not exist in Markov chain. Aborting.'
     else:
-        seed = random.choices(list(word_dictionary.keys()))[0]
+        seed = random.choices(list(markov_system.keys()))[0]
         sentence = seed
         for i in range(chain_length):
             sentence += ' '
-            sentence += sample_next_state(word_dictionary, ' '.join(sentence.split()[i: i+k]))
+            sentence += sample_next_state(markov_system, ' '.join(sentence.split()[i: i+k]))
         return sentence
 
 
