@@ -19,19 +19,19 @@ def clean_input_text(filename: str) -> list[str]:
     return text_list
 
 
-def create_word_dictionary(word_list: list[str], state_length: int = 2, word_dict: dict[str, dict[str, int]] = None) -> dict[str, dict[str, int]]:
+def create_word_dictionary(word_list: list[str], state_length: int = 2, markov_system: dict[str, dict[str, int]] = None) -> dict[str, dict[str, int]]:
     k_length_states = [' '.join(word_list[i:i+state_length]) for i, _ in enumerate(word_list[:-state_length])]
-    if not word_dict:
-        word_dict = {k_state: {} for k_state in set(k_length_states)}
+    if not markov_system:
+        markov_system = {k_state: {} for k_state in set(k_length_states)}
     else:
-        new_word_dict = {k_state: {} for k_state in set(k_length_states)}
-        word_dict = new_word_dict | word_dict
-    for i, x in enumerate(k_length_states[:-1]):
-        if k_length_states[i+1] in word_dict[x]:
-            word_dict[x][k_length_states[i+1].split()[-1]] += 1
+        new_markov_system = {k_state: {} for k_state in set(k_length_states)}
+        markov_system = new_markov_system | markov_system
+    for index, k_length_state in enumerate(k_length_states[:-1]):
+        if k_length_states[index+1] in word_dict[k_length_state]:
+            markov_system[k_length_state][k_length_states[index+1].split()[-1]] += 1
         else:
-            word_dict[x][k_length_states[i+1].split()[-1]] = 1
-    return word_dict
+            markov_system[k_length_state][k_length_states[index+1].split()[-1]] = 1
+    return markov_system
 
 
 def save_dictionary(word_dictionary: dict[str, dict[str, int]], filename: str = 'markov_system.json') -> None:
