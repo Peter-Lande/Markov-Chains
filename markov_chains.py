@@ -47,8 +47,7 @@ class MarkovSystem:
                     sentence = seed
                     for i in range(chain_length):
                         sentence += ' '
-                        sentence += self.sample_next_state(self.state_dictionary,
-                                                           ' '.join(sentence.split()[i: i+self.state_length]))
+                        sentence += self.sample_next_state(' '.join(sentence.split()[i: i+self.state_length]))
                     return sentence
             except KeyError:
                 return 'Seed does not exist in Markov chain. Aborting.'
@@ -57,8 +56,7 @@ class MarkovSystem:
             sentence = seed
             for i in range(chain_length):
                 sentence += ' '
-                sentence += self.sample_next_state(self.state_dictionary,
-                                                   ' '.join(sentence.split()[i: i+self.state_length]))
+                sentence += self.sample_next_state(' '.join(sentence.split()[i: i+self.state_length]))
         return sentence
 
 
