@@ -154,3 +154,4 @@ cython_debug/
 #Testing Ignores
 *.txt
 *.json
+.DS_Store
